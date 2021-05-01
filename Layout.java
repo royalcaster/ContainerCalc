@@ -28,8 +28,8 @@ public class Layout {
         //erstes Content-Panel
         JPanel panel_content = new JPanel();
         panel_content.setBackground(Color.decode("#1E1E1E"));
-        panel_content.setLayout(new BorderLayout(50,50));
-        panel_content.setBounds(35,10,1850,1000);
+        panel_content.setLayout(new BorderLayout(20,20));
+        panel_content.setBounds(35,10,1300,650);
 
         layered_pane.add(panel_content, Integer.valueOf(0));
         
@@ -62,17 +62,17 @@ public class Layout {
 
         //Panel für Informationen INNEN
         JPanel panel_info_inner = new JPanel();
-        panel_info_inner.setBackground(Color.green);
+        panel_info_inner.setBackground(Color.decode("#1E1E1E"));
         panel_info_inner.setLayout(new BoxLayout(panel_info_inner, BoxLayout.X_AXIS));
 
-        panel_info.add(Box.createRigidArea(new Dimension(0,100)));
+        panel_info.add(Box.createRigidArea(new Dimension(0,40)));
         panel_info.add(panel_info_inner);
-        panel_info.add(Box.createRigidArea(new Dimension(0,100)));
+        panel_info.add(Box.createRigidArea(new Dimension(0,40)));
 
         //Panel für 3 Buttons
         JPanel panel_buttons = new JPanel();
         //panel_buttons.setBackground(Color.decode("#252526"));
-        panel_buttons.setBackground(Color.green);
+        panel_buttons.setBackground(Color.decode("#1E1E1E"));
         panel_buttons.setLayout(new BoxLayout(panel_buttons, BoxLayout.Y_AXIS));
 
         //Knöpfe zum Testen
@@ -101,7 +101,7 @@ public class Layout {
         JLabel test4 = new JLabel("sssssss");
         test4.setForeground(Color.white);
 
-        panel_info_inner.add(Box.createRigidArea(new Dimension(200,0)));
+        panel_info_inner.add(Box.createRigidArea(new Dimension(80,0)));
         panel_info_inner.add(test);
         panel_info_inner.add(Box.createRigidArea(new Dimension(200,0)));
         panel_info_inner.add(test2);
