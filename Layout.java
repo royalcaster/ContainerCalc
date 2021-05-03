@@ -43,7 +43,7 @@ public class Layout {
 
         
         //Packstück hinzufügen Button -> Erben
-        JButton button_add = new JButton("Erfassen");
+        Button button_add = new Button("Erfassen", "#007ACC", "#0070BA", "#0065A8");
 
         panel_packagelist.add(button_add);
         
@@ -83,7 +83,6 @@ public class Layout {
         panel_buttons.add(button1);
         panel_buttons.add(button2);
         panel_buttons.add(button3);
-        
 
         //Jlabel zum test
         JLabel test = new JLabel("Dies ist ein Test");
