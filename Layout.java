@@ -50,7 +50,7 @@ public class Layout {
         //Panel für Container-Objekt -> Erben
         JPanel panel_container = new JPanel();
         panel_container.setBackground(Color.decode("#333333"));
-        
+        panel_container.setPreferredSize(new Dimension(200,200));
         panel_content.add(panel_container, BorderLayout.CENTER);
 
         //Panel für Informationen
@@ -76,13 +76,15 @@ public class Layout {
         panel_buttons.setLayout(new BoxLayout(panel_buttons, BoxLayout.Y_AXIS));
 
         //Knöpfe zum Testen
-        JButton button1 = new JButton("Laden");
-        JButton button2 = new JButton("Speichern");
-        JButton button3 = new JButton("Exportieren");
+        Button button_load = new Button("Laden", "#007ACC", "#0070BA", "#0065A8");
+        Button button_save = new Button("Speichern", "#007ACC", "#0070BA", "#0065A8");
+        Button button_export = new Button("Exportieren","#DB4437","#CC4033","#BF3C30");
 
-        panel_buttons.add(button1);
-        panel_buttons.add(button2);
-        panel_buttons.add(button3);
+        panel_buttons.add(button_load);
+        panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
+        panel_buttons.add(button_save);
+        panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
+        panel_buttons.add(button_export);
 
         //Jlabel zum test
         JLabel test = new JLabel("Dies ist ein Test");
