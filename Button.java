@@ -14,7 +14,7 @@ public class Button extends JPanel{
         JLabel label_title = new JLabel(title);
         label_title.setForeground(Color.white);
         label_title.setFont(new Font("Arial", Font.PLAIN, 15));
-        label_title.setBorder(BorderFactory.createEmptyBorder(5,50,5,50));;
+        label_title.setBorder(BorderFactory.createEmptyBorder(5,60,5,60));;
 
         add(label_title);
 

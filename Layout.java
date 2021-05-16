@@ -61,12 +61,18 @@ public class Layout {
         panel_content.add(panel_info, BorderLayout.PAGE_START);
 
         //Panel für Informationen INNEN
-        JPanel panel_info_inner = new JPanel();
-        panel_info_inner.setBackground(Color.decode("#1E1E1E"));
-        panel_info_inner.setLayout(new BoxLayout(panel_info_inner, BoxLayout.X_AXIS));
+        JPanel panel_info_inner1 = new JPanel();
+        panel_info_inner1.setBackground(Color.decode("#1E1E1E"));
+        panel_info_inner1.setLayout(new BoxLayout(panel_info_inner1, BoxLayout.X_AXIS));
+
+        JPanel panel_info_inner2 = new JPanel();
+        panel_info_inner2.setBackground(Color.decode("#1E1E1E"));
+        panel_info_inner2.setLayout(new BoxLayout(panel_info_inner2, BoxLayout.X_AXIS));
 
         panel_info.add(Box.createRigidArea(new Dimension(0,40)));
-        panel_info.add(panel_info_inner);
+        panel_info.add(panel_info_inner1);
+        panel_info.add(Box.createRigidArea(new Dimension(0,10)));
+        panel_info.add(panel_info_inner2);
         panel_info.add(Box.createRigidArea(new Dimension(0,40)));
 
         //Panel für 3 Buttons
@@ -86,33 +92,22 @@ public class Layout {
         panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
         panel_buttons.add(button_export);
 
-        //Jlabel zum test
-        JLabel test = new JLabel("Dies ist ein Test");
-        test.setForeground(Color.white);
+        Info info_left = new Info("Linke Hälfte",1234);
+        Info info_right = new Info("Rechte Hälfte",1234);
+        Info info_dif = new Info("Differenz",1234);
+        Info info_both = new Info("Gesamt",1234);
 
-        //Jlabel zum test
-        JLabel test2 = new JLabel("test");
-         test2.setForeground(Color.white);
-
-        //Jlabel zum test
-        JLabel test3 = new JLabel("blablabla");
-        test3.setForeground(Color.white);
-
-        //Jlabel zum test
-        JLabel test4 = new JLabel("sssssss");
-        test4.setForeground(Color.white);
-
-        panel_info_inner.add(Box.createRigidArea(new Dimension(80,0)));
-        panel_info_inner.add(test);
-        panel_info_inner.add(Box.createRigidArea(new Dimension(200,0)));
-        panel_info_inner.add(test2);
-        panel_info_inner.add(Box.createRigidArea(new Dimension(200,0)));
-        panel_info_inner.add(test3);
-        panel_info_inner.add(Box.createRigidArea(new Dimension(200,0)));
-        panel_info_inner.add(test4);
-        panel_info_inner.add(Box.createRigidArea(new Dimension(200,0)));
-        panel_info_inner.add(panel_buttons);
-        panel_info_inner.add(Box.createRigidArea(new Dimension(200,0)));
+        panel_info_inner1.add(Box.createRigidArea(new Dimension(80,0)));
+        panel_info_inner1.add(info_left);
+        panel_info_inner1.add(Box.createRigidArea(new Dimension(200,0)));
+        panel_info_inner1.add(info_right);
+        panel_info_inner1.add(Box.createRigidArea(new Dimension(200,0)));
+        panel_info_inner1.add(info_dif);
+        panel_info_inner1.add(Box.createRigidArea(new Dimension(200,0)));
+        panel_info_inner1.add(info_both);
+        panel_info_inner1.add(Box.createRigidArea(new Dimension(200,0)));
+        panel_info_inner1.add(panel_buttons);
+        panel_info_inner1.add(Box.createRigidArea(new Dimension(200,0)));
 
         //Komponenten sichtbar machen
         panel_info.setVisible(true);
