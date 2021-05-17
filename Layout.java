@@ -22,14 +22,15 @@ public class Layout {
 
         //Layered Pane
         JLayeredPane layered_pane = new JLayeredPane();
+        layered_pane.setLayout(new FlowLayout());
         
         frame_main.add(layered_pane);
         
         //erstes Content-Panel
         JPanel panel_content = new JPanel();
-        panel_content.setBackground(Color.decode("#1E1E1E"));
+        //panel_content.setBackground(Color.decode("#1E1E1E"));
+        panel_content.setBackground(Color.blue);
         panel_content.setLayout(new BorderLayout(20,20));
-        panel_content.setBounds(35,10,1300,650);
 
         layered_pane.add(panel_content, Integer.valueOf(0));
         
@@ -40,18 +41,22 @@ public class Layout {
         panel_packagelist.setLayout(new FlowLayout());
 
         panel_content.add(panel_packagelist, BorderLayout.WEST);
-
         
         //Packstück hinzufügen Button -> Erben
         Button button_add = new Button("Erfassen", "#007ACC", "#0070BA", "#0065A8");
-
         panel_packagelist.add(button_add);
         
-        //Panel für Container-Objekt -> Erben
+        //Panel für Container-aussen -> Erben
+        JPanel panel_container_outer = new JPanel();
+        panel_container_outer.setBackground(Color.green);
+        panel_container_outer.setLayout(null);
+        panel_content.add(panel_container_outer, BorderLayout.CENTER);
+
+        //Panel für Container-aussen -> Erben
         JPanel panel_container = new JPanel();
-        panel_container.setBackground(Color.decode("#333333"));
-        panel_container.setPreferredSize(new Dimension(200,200));
-        panel_content.add(panel_container, BorderLayout.CENTER);
+        panel_container.setBackground(Color.red);
+        panel_container.setBounds(0,0,1500,400);
+        panel_container_outer.add(panel_container);
 
         //Panel für Informationen
         JPanel panel_info = new JPanel();
