@@ -51,4 +51,8 @@ int p_width, p_length, p_height, p_weight;
         package_panel.setVisible(true);
         panel.add(package_panel);
     }
+
+    public void removePackage(){
+        
+    }
 }
