@@ -2,7 +2,7 @@ import java.awt.Color;
 
 import javax.swing.JPanel;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+//import org.graalvm.compiler.lir.CompositeValue.Component;
 
 public class Package{
 

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.security.spec.RSAPrivateCrtKeySpec;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -96,7 +97,6 @@ public class Layout {
                 //SPRING-LAYOUT!!!
                 SpringLayout layout = new SpringLayout();
 
-                
                 //Content-Panel
                 JPanel input_panel = new JPanel();
                 input_panel.setBackground(Color.decode("#282829"));
@@ -179,12 +179,40 @@ public class Layout {
             }
         });
 
+
+        //Panel für Container-aussen -> Erben
+        JPanel panel_container_outer = new JPanel();
+        panel_container_outer.setBackground(Color.decode("#1E1E1E"));
+        panel_container_outer.setLayout(new FlowLayout(FlowLayout.LEFT));
+        panel_content.add(panel_container_outer, BorderLayout.CENTER);
+        
+
+        //Panel für Container-innen -> Erben
+        JPanel panel_container = new JPanel();
+        panel_container.setBackground(Color.decode("#282829"));
+        panel_container.setPreferredSize(new Dimension(1000,400));
+        panel_container.setLayout(null);
+        panel_container.setBorder(BorderFactory.createLineBorder(Color.decode("#BFBFBF"), 1));
+        panel_container_outer.add(panel_container);
+
+        //Achsen für Einteilung
+        Axis axis_1 = new Axis(167);
+        Axis axis_2 = new Axis(333);
+        Axis axis_3 = new Axis(666);
+        Axis axis_4 = new Axis(833);
+
+        panel_container.add(axis_1);
+        panel_container.add(axis_2);
+        panel_container.add(axis_3);
+        panel_container.add(axis_4);
+
         ButtonSmall button_draw = new ButtonSmall("Zeichnen", "#007ACC", "#0070BA", "#0065A8");
         button_draw.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e){
                 if (!packages.isEmpty()) {  
                     Draggable drag = new Draggable(packages.get(packages.size()-1));
                     draggables.add(drag);
+                    panel_container.add(drag);
                     packages.remove(packages.get(packages.size()-1));
                     representers.clear();
                     panel_packagelist.removeAll();
@@ -199,6 +227,7 @@ public class Layout {
                     }
 
                     SwingUtilities.updateComponentTreeUI(panel_packagelist);
+                    SwingUtilities.updateComponentTreeUI(panel_container);
             }
         }
         });
@@ -227,24 +256,12 @@ public class Layout {
                     }
 
                     SwingUtilities.updateComponentTreeUI(panel_packagelist);
-                }
+                }       
             }
         });
 
         panel_operations.add(button_draw);
         panel_operations.add(button_delete);
-        
-        //Panel für Container-aussen -> Erben
-        JPanel panel_container_outer = new JPanel();
-        panel_container_outer.setBackground(Color.decode("#1E1E1E"));
-        panel_container_outer.setLayout(new FlowLayout(FlowLayout.LEFT));
-        panel_content.add(panel_container_outer, BorderLayout.CENTER);
-
-        //Panel für Container-innen -> Erben
-        JPanel panel_container = new JPanel();
-        panel_container.setBackground(Color.decode("#282829"));
-        panel_container.setPreferredSize(new Dimension(1000,400));
-        panel_container_outer.add(panel_container);
 
         //Panel für Informationen
         JPanel panel_info = new JPanel();
