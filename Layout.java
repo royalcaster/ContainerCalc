@@ -16,10 +16,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.BorderUIResource;
 
-import org.graalvm.compiler.hotspot.nodes.DimensionsNode;
+//import org.graalvm.compiler.hotspot.nodes.DimensionsNode;
 
 import jdk.swing.interop.SwingInterOpUtils;
-import jdk.tools.jlink.internal.ResourcePrevisitor;
+//import jdk.tools.jlink.internal.ResourcePrevisitor;
 
 public class Layout {
 
@@ -28,7 +28,7 @@ public class Layout {
     int selection_index;
     ArrayList<Package> packages;
     ArrayList<Representer> representers;
-    ArrayList<Draggable> draggables; 
+    ArrayList<Draggable> draggables;
     JPanel panel_packagelist;
 
     public Layout(){
@@ -53,7 +53,7 @@ public class Layout {
         //Layered Pane
         JLayeredPane layered_pane = new JLayeredPane();
         layered_pane.setLayout(new FlowLayout());
-        
+ 
         frame_main.add(layered_pane);
         
         //erstes Content-Panel
@@ -200,6 +200,7 @@ public class Layout {
 
                     SwingUtilities.updateComponentTreeUI(panel_packagelist);
             }
+        }
         });
 
 
