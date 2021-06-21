@@ -3,10 +3,14 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.*;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 
 public class Draggable extends JPanel{
+
+    int mouse_x;
+    int mouse_y;
 
     public Draggable(Package p){
         setBounds(30,30,p.getWidth(), p.getLength());
@@ -34,6 +38,29 @@ public class Draggable extends JPanel{
         panel_content.add(Box.createRigidArea(new Dimension(15,0)));
         panel_content.add(cancel);
         add(panel_content);
+
+        //Drag-Funktion:
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                //PointerInfo a = MouseInfo.getPointerInfo();
+                //Point b = a.getLocation();
+                mouse_x = e.getX();
+                mouse_y = e.getY();
+            }
+         });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+                    setLocation(e.getX() - mouse_x + getLocation().x,e.getY() - mouse_y + getLocation().y);
+            }
+        });
+
+
+        setBorder(BorderFactory.createLineBorder(Color.decode("#282829"), 2));
+        
 
         setVisible(true);
     }
