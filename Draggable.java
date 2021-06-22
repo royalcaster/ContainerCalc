@@ -65,4 +65,49 @@ public class Draggable extends JPanel{
         setVisible(true);
     }
     
+    /* Plan für Einzelgewicht-Methode
+        Rechteck, Koordinatenursprung oben links
+        
+        double Gewicht = 0
+
+        X-Koordinate / (1000/6)
+
+        0-1 3er Zone
+        1-2 2er Zone
+        2-3 1er Zone
+        3-4 1er Zone
+        4-5 2er Zone
+        5-6 3er Zone
+
+        int Package-Rest = länge des Packages
+
+        while (Package-Rest > (1000/6))
+            -> Fläche bis zu erster Begränzung
+                ( (package.getX()/(1000/6) -> auf nächstgrößere Ganzzahl Runden * 1000/6) - package.getX() ) * getLength = (Fläche im JPanel)
+
+                int faktor;
+
+                switch ((package.getX()/(1000/6) -> auf nächstgrößere Ganzzahl Runden))
+                case 1: Faktor 3
+                case 2: Faktor 2
+                case 3: Faktor 1
+                case 4: Faktor 1
+                case 5: Faktor 2
+                case 6: Faktor 3
+
+                Fläche im JPanel * Faktor = Gewicht im einzelnen Abschnitt
+
+                Gewicht = Gewicht + Gewicht im einzelnen Abschnitt
+
+                Package-Rest = Package-rest - ( (package.getX()/(1000/6) -> auf nächstgrößere Ganzzahl Runden * 1000/6) - package.getX() )
+
+    */
+
+        public int getWeightInContainer(){
+
+            
+
+            return 0;
+        }
+            
 }
