@@ -127,7 +127,7 @@ public class Draggable extends JPanel{
 
 
 
-            for (int i = getX(); i < getX()+getWidth(); i += (Math.ceil(1.0 * i/(1000/6))*1000/6) - getX()) {
+            for (int i = getX(); i <= getX()+getWidth(); i += (Math.ceil(1.0 * i/(1000/6))*1000/6) - i) {
                 System.out.println(i);
             }
 
