@@ -1,5 +1,7 @@
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -11,13 +13,17 @@ public class Draggable extends JPanel{
 
     int mouse_x;
     int mouse_y;
+    int package_x;
+    JPanel panel_content;
 
     public Draggable(Package p){
         setBounds(30,30,p.getWidth(), p.getLength());
         setBackground(Color.decode("#007ACC"));
         setLayout(new GridLayout(1,1));
         
-        JPanel panel_content = new JPanel();
+        
+
+        panel_content = new JPanel();
         panel_content.setLayout(new BoxLayout(panel_content, BoxLayout.X_AXIS));
         panel_content.setBackground(Color.decode("#007ACC"));
 
@@ -33,10 +39,20 @@ public class Draggable extends JPanel{
             }
         });
 
-        panel_content.add(Box.createRigidArea(new Dimension(p.getWidth()/3,0)));
+        ButtonSmall rotate = new ButtonSmall("->", "#0065A8", "#005D9C", "#00568F");
+        rotate.setMaximumSize(new Dimension(30,30));
+        rotate.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                rotate();
+            }
+        });
+
+        panel_content.add(Box.createRigidArea(new Dimension(p.getWidth()/4,0)));
         panel_content.add(shorter);
-        panel_content.add(Box.createRigidArea(new Dimension(15,0)));
+        panel_content.add(Box.createRigidArea(new Dimension(10,0)));
         panel_content.add(cancel);
+        panel_content.add(Box.createRigidArea(new Dimension(5,0)));
+        panel_content.add(rotate);
         add(panel_content);
 
         //Drag-Funktion:
@@ -105,9 +121,22 @@ public class Draggable extends JPanel{
 
         public int getWeightInContainer(){
 
-            
+            //int gewicht = 0
+            //Distanz Zwischen Beginn des Draggables und 1. grenze -> Anteil an Gesamtlänge:  Gesamtlänge / Distanz Beginn 1. Grenze
+            //Gewicht = p.getWeight() * Anteil 
 
-            return 0;
-        }
+
+
+            for (int i = getX(); i < getX()+getWidth(); i += (Math.ceil(1.0 * i/(1000/6))*1000/6) - getX()) {
+                System.out.println(i);
+            }
+
+            return 0;            
             
+        }
+        
+        public void rotate(){
+            setSize(new Dimension(getHeight(),getWidth()));
+            SwingUtilities.updateComponentTreeUI(panel_content);
+        }
 }

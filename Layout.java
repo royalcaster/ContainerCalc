@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.event.MouseMotionListener;
 import java.security.spec.RSAPrivateCrtKeySpec;
 
 import javax.swing.BorderFactory;
@@ -13,16 +14,18 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.synth.SynthSplitPaneUI;
 
 //import org.graalvm.compiler.hotspot.nodes.DimensionsNode;
 
 import jdk.swing.interop.SwingInterOpUtils;
 //import jdk.tools.jlink.internal.ResourcePrevisitor;
 
-public class Layout {
+public class Layout{
 
     Package pack;
     Representer representer;
@@ -31,6 +34,8 @@ public class Layout {
     ArrayList<Representer> representers;
     ArrayList<Draggable> draggables;
     JPanel panel_packagelist;
+    JPanel panel_container; 
+
 
     public Layout(){
 
@@ -91,63 +96,98 @@ public class Layout {
         //Fenster für Informationen über Panel bei Knopfdruck erstellen
         button_add.addMouseListener(new MouseAdapter(){
             public void mousePressed(MouseEvent e){
-                JFrame frame_input = new JFrame();
-                frame_input.setSize(new Dimension(550,350));
+                JFrame frame_input = new JFrame("Packstück erfassen");
+                frame_input.setSize(new Dimension(650,450));
                 
-                //SPRING-LAYOUT!!!
-                SpringLayout layout = new SpringLayout();
-
                 //Content-Panel
                 JPanel input_panel = new JPanel();
                 input_panel.setBackground(Color.decode("#282829"));
-                input_panel.setLayout(new GridLayout(9,1));
+                input_panel.setLayout(new BoxLayout(input_panel, BoxLayout.Y_AXIS));
+                input_panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+                JPanel top_panel = new JPanel();
+                top_panel.setLayout(new GridLayout(6,4,5,5));
+                top_panel.setBackground(Color.decode("#282829"));
+
+                JPanel bottom_panel = new JPanel();
+                bottom_panel.setLayout(new GridLayout(2,2,5,5));
+                bottom_panel.setBackground(Color.decode("#282829"));
 
                 Label label_name = new Label("Name:");
                 Label label_shorter = new Label("Abkürzung:");
                 Label label_width = new Label("Breite:");
-                Label label_length = new Label("Länge");
+                Label label_length = new Label("Länge:");
                 Label label_height = new Label("Höhe:");
-                Label label_weight = new Label("Gewicht");
+                Label label_weight = new Label("Gewicht:");
+
+                Input input_name = new Input();
+                Input input_shorter = new Input();
+                Input input_width = new Input();
+                Input input_length = new Input();
+                Input input_height = new Input();
+                Input input_weight = new Input();
 
                 //layout.putConstraint(SpringLayout.WEST, label_name,5);
                 //layout.putConstraint(SpringLayout.NORTH, label, 5, SpringLayout.NORTH, contentPane);
 
                 Button button_submit = new Button("Ok", "#007ACC", "#0070BA", "#0065A8");
-                Button button_cancel = new Button("Abbrechen", "#4D4D4D", "#474747", "#424242");
+                Button button_cancel = new Button("Abbrechen","#DB4437","#CC4033","#BF3C30");
 
                 //Text wenn nicht alles ausgefüllt ist
-                JLabel warning = new JLabel("Bitte alle Textfelder ausfüllen.");
+                JLabel warning = new JLabel("Bitte alle Maße angeben.");
                 warning.setFont(new Font("Arial", Font.PLAIN, 15));
                 //warning.setForeground(Color.decode("#282829"));
-                warning.setForeground(Color.decode("#1E1E1E"));
+                warning.setForeground(Color.decode("#282829"));
 
-                input_panel.add(label_name);
-                input_panel.add(label_shorter);
-                input_panel.add(label_width);
-                input_panel.add(label_length);
-                input_panel.add(label_height);
-                input_panel.add(label_weight);
-                input_panel.add(warning);
-                input_panel.add(button_submit);
-                input_panel.add(button_cancel);
-                
+                top_panel.add(new Filler());
+                top_panel.add(label_name);
+                top_panel.add(input_name);
+                top_panel.add(new Filler());
+                top_panel.add(new Filler());
+                top_panel.add(label_shorter);
+                top_panel.add(input_shorter);
+                top_panel.add(new Filler());
+                top_panel.add(new Filler());
+                top_panel.add(label_width);
+                top_panel.add(input_width);
+                top_panel.add(new Filler());
+                top_panel.add(new Filler());
+                top_panel.add(label_length);
+                top_panel.add(input_length);
+                top_panel.add(new Filler());
+                top_panel.add(new Filler());
+                top_panel.add(label_height);
+                top_panel.add(input_height);
+                top_panel.add(new Filler());
+                top_panel.add(new Filler());
+                top_panel.add(label_weight);
+                top_panel.add(input_weight);
+                top_panel.add(new Filler());
+
+                bottom_panel.add(button_cancel);
+                bottom_panel.add(button_submit);
+                bottom_panel.add(warning);
+
+                input_panel.add(top_panel);
+                input_panel.add(Box.createRigidArea(new Dimension(0,30)));
+                input_panel.add(bottom_panel);
 
                 button_submit.addMouseListener(new MouseAdapter(){
                     public void mouseClicked(MouseEvent e){
                         //pack = new Package(label_shorter.getContent(),label_name.getContent(),Integer.parseInt(label_width.getContent()),Integer.parseInt(label_length.getContent()),Integer.parseInt(label_height.getContent()),Integer.parseInt(label_weight.getContent()));
                         
                         //checken, ob alle ausgefüllt sind
-                        if( label_name.isEmpty() || 
-                        label_shorter.isEmpty() ||
-                        label_width.isEmpty() ||
-                        label_length.isEmpty() ||
-                        label_height.isEmpty() ||
-                        label_weight.isEmpty()) {
+                        if( input_name.isEmpty() || 
+                        input_shorter.isEmpty() ||
+                        input_width.isEmpty() ||
+                        input_length.isEmpty() ||
+                        input_height.isEmpty() ||
+                        input_weight.isEmpty()) {
                                 warning.setForeground(Color.decode("#DB4437"));
                                 SwingUtilities.updateComponentTreeUI(input_panel);
                             }
                         else {
-                            pack = new Package(label_shorter.getContent(),label_name.getContent(),label_width.getNumber(),label_length.getNumber(),label_height.getNumber(),label_weight.getNumber());
+                            pack = new Package(input_shorter.getContent(),input_name.getContent(),input_width.getNumber(),input_length.getNumber(),input_height.getNumber(),input_weight.getNumber());
                              //zu ArrayList aus Packages hinzufügen
                             packages.add(pack);
 
@@ -174,7 +214,14 @@ public class Layout {
                     }  
                 });
 
+                button_cancel.addMouseListener(new MouseAdapter() {
+                    public void mousePressed(MouseEvent e) {
+                        frame_input.setVisible(false);
+                    }
+                });
+
                 frame_input.add(input_panel);
+                frame_input.setLocationRelativeTo(null);
                 frame_input.setVisible(true);
             }
         });
@@ -188,7 +235,7 @@ public class Layout {
         
 
         //Panel für Container-innen -> Erben
-        JPanel panel_container = new JPanel();
+        panel_container = new JPanel();
         panel_container.setBackground(Color.decode("#282829"));
         panel_container.setPreferredSize(new Dimension(1000,400));
         panel_container.setLayout(null);
@@ -321,7 +368,22 @@ public class Layout {
 
         JPanel panel_footer = new JPanel();
         panel_footer.setBackground(Color.decode("#282829"));
+        panel_footer.setLayout(new FlowLayout(SwingConstants.RIGHT));
         panel_content.add(panel_footer, BorderLayout.PAGE_END);
+
+        Button button_calc = new Button("Berechnen", "#0F9D58", "#0F9152" , "#0D854B");
+        panel_footer.add(button_calc);
+        button_calc.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                for (int i = 0; i < draggables.size(); i++) {
+                    String s = Integer.toString(draggables.get(i).getWeightInContainer());
+                    System.out.println(s);
+                }
+                
+                
+            }
+            
+        });
 
         //Komponenten sichtbar machen
         panel_info.setVisible(true);
@@ -338,21 +400,5 @@ public class Layout {
     // representer mit selection_index selecten
 
     //Beispiel: arraylist mit 5 packages (0-4) sel_index_neu = 0 und sel_index_alt = 0
-    // 
-
-    public void reloadPackagelist(){
-    }
-
-        public void setSelection(){
-
-                    
-                    // representers.get(selection_index).deselect();
-
-                    // System.out.println(selection_index);
-                    
-                    // selection_index = representers.indexOf(representer);
-                    // representers.get(selection_index);
-
-                    // System.out.println(selection_index);
-        }
+    
 }
