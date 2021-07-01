@@ -6,6 +6,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Info extends JPanel{
+
+JLabel number;
+
     public Info(String title_text, int number_text){
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.decode("#1E1E1E"));
@@ -20,5 +23,9 @@ public class Info extends JPanel{
 
         add(title);
         add(number);
+    }
+
+    public void setValue(double n) {
+        number.setText(Double.toString(n));
     }
 }

@@ -35,7 +35,12 @@ public class Layout{
     ArrayList<Draggable> draggables;
     JPanel panel_packagelist;
     JPanel panel_container; 
-
+    Info info_left;
+    Info info_right;
+    Info info_dif;
+    Info info_both;
+    Double weight_both;
+    JPanel panel_info;
 
     public Layout(){
 
@@ -46,8 +51,7 @@ public class Layout{
 
         draggables = new ArrayList<>();
 
-        //selectable index für package-liste auf 0 setzen
-        selection_index = 0;
+        weight_both = 0.0;
 
         //Fenster
         JFrame frame_main = new JFrame("ContainerCalc");
@@ -311,7 +315,7 @@ public class Layout{
         panel_operations.add(button_delete);
 
         //Panel für Informationen
-        JPanel panel_info = new JPanel();
+        panel_info = new JPanel();
         panel_info.setBackground(Color.decode("#1E1E1E"));
         panel_info.setLayout(new BoxLayout(panel_info, BoxLayout.Y_AXIS));
         
@@ -349,10 +353,10 @@ public class Layout{
         panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
         panel_buttons.add(button_export);
 
-        Info info_left = new Info("Linke Hälfte",1234);
-        Info info_right = new Info("Rechte Hälfte",1234);
-        Info info_dif = new Info("Differenz",1234);
-        Info info_both = new Info("Gesamt",1234);
+        info_left = new Info("Linke Hälfte",1234);
+        info_right = new Info("Rechte Hälfte",1234);
+        info_dif = new Info("Differenz",1234);
+        info_both = new Info("Gesamt",1234);
 
         panel_info_inner1.add(Box.createRigidArea(new Dimension(80,0)));
         panel_info_inner1.add(info_left);
@@ -367,7 +371,7 @@ public class Layout{
         panel_info_inner1.add(Box.createRigidArea(new Dimension(100,0)));
 
         JPanel panel_footer = new JPanel();
-        panel_footer.setBackground(Color.decode("#282829"));
+        panel_footer.setBackground(Color.decode("#1E1E1E"));
         panel_footer.setLayout(new FlowLayout(SwingConstants.RIGHT));
         panel_content.add(panel_footer, BorderLayout.PAGE_END);
 
@@ -376,8 +380,11 @@ public class Layout{
         button_calc.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 for (int i = 0; i < draggables.size(); i++) {
-                    String s = Integer.toString(draggables.get(i).getWeightInContainer());
+                    String s = Double.toString(draggables.get(i).getWeightInContainer());
                     System.out.println(s);
+                    //weight_both += draggables.get(i).getWeightInContainer();
+                    //updateInfoPanel();
+                    //Einzelne Gewichte irgendwo anzeigen lassen! (keine ahnung wo und wie...)
                 }
                 
                 
@@ -401,4 +408,11 @@ public class Layout{
 
     //Beispiel: arraylist mit 5 packages (0-4) sel_index_neu = 0 und sel_index_alt = 0
     
+    public void updateInfoPanel(){
+
+        info_both.setValue(weight_both);
+        SwingUtilities.updateComponentTreeUI(panel_info);
+
+    }
+
 }

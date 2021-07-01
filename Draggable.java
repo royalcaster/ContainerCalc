@@ -120,32 +120,42 @@ public class Draggable extends JPanel{
 
                 */
 
-        public int getWeightInContainer(){
+        public double getWeightInContainer(){
 
-            //int gewicht = 0
-            //Distanz Zwischen Beginn des Draggables und 1. grenze -> Anteil an Gesamtlänge:  Gesamtlänge / Distanz Beginn 1. Grenze
-            //Gewicht = p.getWeight() * Anteil 
+            double weight = 0;
 
-            int weight = 0;
-
-            //Beginn des Pakets bis erste Grenze
-            weight = (getNextBorder(getX()) - getX()) / getWidth() * package_weight * getFactor(Math.ceil(1.0 * getX()/(1000/6)));
-            
-
-        if (getNextBorder(getX()) != getPrevBorder(getX()+getWidth())) {
-                //Schleife für den Fall, dass mehr als 2 Zonen beansprucht werden
+            //Wenn package nur in einer zone liegt, liefere das gewicht * faktor
+            if (getWidth() <= 1000/6) {
+                return package_weight * (getFactor(getNextBorder(getX()+getWidth()) / (1000/6)));
             }
+            //wenn das package sich über mehrere zonen streckt
+            else {
 
-            /*for (int i = getX(); i <= getPrevBorder(getX()+getWidth()); i = getNextBorder(i)) {
-                System.out.println(i);
-            }*/
-
-            //weight = weight;
-
-            return  getWidth();
-            // 
-            /// getWidth() * package_weight * getFactor(Math.ceil(1.0 * getX()/(1000/6)));            
+                //Beginn des Pakets bis erste Grenze
+                weight = ((double) getNextBorder(getX()) - getX()) / (double) getWidth() * package_weight * getFactor(Math.ceil(1.0 * getX()/(1000/6)));
             
+
+                if (getNextBorder(getX()) != getPrevBorder(getX()+getWidth())) {
+                    //Schleife für den Fall, dass mehr als 2 Zonen beansprucht werden
+
+                    for (int i = getNextBorder(getX()); i < getPrevBorder(getX()+getWidth()) - 5; i += 1000/6) {
+                        weight += (1000.0/6.0) / getWidth() * package_weight * getFactor(Math.ceil(i / (1000/6))+1);
+                        
+                        //System.out.println("Faktor: " + (Math.ceil(i / (1000/6))+1));
+                        //System.out.println("i: " + i);
+                    }
+
+                    //System.out.println(getNextBorder(getX()) + " | " + getPrevBorder(getX()+getWidth()));
+                 }
+
+                //Letzte Grenze bis Ende Packstück
+                weight += (double) (getX()+getWidth() - getPrevBorder(getX()+getWidth())) / (double) getWidth() * package_weight * (getFactor(getNextBorder(getX()+getWidth()) / (1000/6)));
+
+                 
+
+                return  weight;    
+            
+            }
         }
         
         public void rotate(){
