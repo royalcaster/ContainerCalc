@@ -15,13 +15,14 @@ public class Draggable extends JPanel{
     int mouse_y;
     int package_x;
     JPanel panel_content;
+    int package_weight;
 
     public Draggable(Package p){
         setBounds(30,30,p.getWidth(), p.getLength());
         setBackground(Color.decode("#007ACC"));
         setLayout(new GridLayout(1,1));
         
-        
+        package_weight = p.getWeight();
 
         panel_content = new JPanel();
         panel_content.setLayout(new BoxLayout(panel_content, BoxLayout.X_AXIS));
@@ -117,7 +118,7 @@ public class Draggable extends JPanel{
 
                 Package-Rest = Package-rest - ( (package.getX()/(1000/6) -> auf nächstgrößere Ganzzahl Runden * 1000/6) - package.getX() )
 
-    */
+                */
 
         public int getWeightInContainer(){
 
@@ -125,18 +126,50 @@ public class Draggable extends JPanel{
             //Distanz Zwischen Beginn des Draggables und 1. grenze -> Anteil an Gesamtlänge:  Gesamtlänge / Distanz Beginn 1. Grenze
             //Gewicht = p.getWeight() * Anteil 
 
+            int weight = 0;
 
+            //Beginn des Pakets bis erste Grenze
+            weight = (getNextBorder(getX()) - getX()) / getWidth() * package_weight * getFactor(Math.ceil(1.0 * getX()/(1000/6)));
+            
 
-            for (int i = getX(); i <= getX()+getWidth(); i += (Math.ceil(1.0 * i/(1000/6))*1000/6) - i) {
-                System.out.println(i);
+        if (getNextBorder(getX()) != getPrevBorder(getX()+getWidth())) {
+                //Schleife für den Fall, dass mehr als 2 Zonen beansprucht werden
             }
 
-            return 0;            
+            /*for (int i = getX(); i <= getPrevBorder(getX()+getWidth()); i = getNextBorder(i)) {
+                System.out.println(i);
+            }*/
+
+            //weight = weight;
+
+            return  getWidth();
+            // 
+            /// getWidth() * package_weight * getFactor(Math.ceil(1.0 * getX()/(1000/6)));            
             
         }
         
         public void rotate(){
             setSize(new Dimension(getHeight(),getWidth()));
             SwingUtilities.updateComponentTreeUI(panel_content);
+        }
+
+        public int getNextBorder(int n){
+            return (int) (Math.ceil(1.0 * n / (1000/6)) * 1000/6);
+        }
+
+        public int getPrevBorder(int n) {
+            return (int) (Math.floor(1.0 * n / (1000/6)) * 1000/6);
+        }
+
+        public int getFactor(double n) {
+            switch((int) n) {
+                case 1: return 3;
+                case 2: return 2;
+                case 3: return 1;
+                case 4: return 1;
+                case 5: return 2;
+                case 6: return 3;
+                default: return 0;
+            }
         }
 }
