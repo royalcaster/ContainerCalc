@@ -353,10 +353,10 @@ public class Layout{
         panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
         panel_buttons.add(button_export);
 
-        info_left = new Info("Linke Hälfte",1234);
-        info_right = new Info("Rechte Hälfte",1234);
-        info_dif = new Info("Differenz",1234);
-        info_both = new Info("Gesamt",1234);
+        info_left = new Info("Linke Hälfte");
+        info_right = new Info("Rechte Hälfte");
+        info_dif = new Info("Differenz");
+        info_both = new Info("Gesamt");
 
         panel_info_inner1.add(Box.createRigidArea(new Dimension(80,0)));
         panel_info_inner1.add(info_left);
@@ -379,14 +379,20 @@ public class Layout{
         panel_footer.add(button_calc);
         button_calc.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
+
+                weight_both = 0.0;
+
                 for (int i = 0; i < draggables.size(); i++) {
-                    String s = Double.toString(draggables.get(i).getWeightInContainer());
-                    System.out.println(s);
-                    //weight_both += draggables.get(i).getWeightInContainer();
+                    //String s = Double.toString(draggables.get(i).getWeightInContainer());
+                    //System.out.println(s);
+
+                    weight_both += draggables.get(i).getWeightInContainer();
                     //updateInfoPanel();
                     //Einzelne Gewichte irgendwo anzeigen lassen! (keine ahnung wo und wie...)
                 }
                 
+                    info_both.setValue(weight_both);
+                    SwingUtilities.updateComponentTreeUI(panel_info);
                 
             }
             
@@ -414,5 +420,22 @@ public class Layout{
         SwingUtilities.updateComponentTreeUI(panel_info);
 
     }
+
+    public double getWeightInLeft(){
+        double weight = 0.0;
+        
+        for (int i = 0; i < draggables.size(); i++) {
+            //Wenn Draggable in Linker hälfte ohne überschneidung
+            if (draggables.get(i).getX()+draggables.get(i).getWidth() < 501) {
+                weight += draggables.get(i).getWeightInContainer();
+            }
+            else if (draggables.get(i).getX() < 501 && draggables.get(i).getX()+draggables.get(i).getWidth() > 500) {
+                weight += draggables.get(i).getWeightInBorders(501);
+            }
+        }
+
+        return weight;
+    }
+
 
 }
