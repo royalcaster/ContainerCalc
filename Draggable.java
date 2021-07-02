@@ -124,6 +124,8 @@ public class Draggable extends JPanel{
 
             double weight = 0;
 
+            // IF statement muss überarbeitet werden!!! Wenn kleiner als (1000/6), kann es trotzdem auf einer Grenze liegen!
+
             //Wenn package nur in einer zone liegt, liefere das gewicht * faktor
             if (getWidth() <= 1000/6) {
                 return package_weight * (getFactor(getNextBorder(getX()+getWidth()) / (1000/6)));
@@ -156,6 +158,10 @@ public class Draggable extends JPanel{
                 return  weight;    
             
             }
+        }
+
+        public void getWeightInBorders(int b){
+            //Idee: gleicher ABlauf wie in getWeightInContainer() aber i kann nicht größer als 500 werden
         }
         
         public void rotate(){
