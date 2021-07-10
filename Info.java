@@ -27,7 +27,8 @@ JLabel number;
     }
 
     public void setValue(double n) {
-        String s = Double.toString(n);
-        number.setText(s + " kg"); 
+        //String s = Double.toString(n);
+        int b = (int) n;
+        number.setText(b + " kg"); 
     }
 }

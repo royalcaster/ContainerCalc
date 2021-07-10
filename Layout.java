@@ -30,17 +30,24 @@ public class Layout{
     Package pack;
     Representer representer;
     int selection_index;
+
     ArrayList<Package> packages;
     ArrayList<Representer> representers;
     ArrayList<Draggable> draggables;
+
     JPanel panel_packagelist;
-    JPanel panel_container; 
+    JPanel panel_container;
+    JPanel panel_info;
+
     Info info_left;
     Info info_right;
     Info info_dif;
     Info info_both;
+
     Double weight_both;
-    JPanel panel_info;
+    Double weight_left;
+    Double weight_right;
+    Double weight_dif;
 
     public Layout(){
 
@@ -251,11 +258,13 @@ public class Layout{
         Axis axis_2 = new Axis(333);
         Axis axis_3 = new Axis(666);
         Axis axis_4 = new Axis(833);
+        Axis axis_5 = new Axis(500);
 
         panel_container.add(axis_1);
         panel_container.add(axis_2);
         panel_container.add(axis_3);
         panel_container.add(axis_4);
+        panel_container.add(axis_5);
 
         ButtonSmall button_draw = new ButtonSmall("Zeichnen", "#007ACC", "#0070BA", "#0065A8");
         button_draw.addMouseListener(new MouseAdapter() {
@@ -283,6 +292,7 @@ public class Layout{
         }
         });
 
+        
 
         //Entfernen-Knopf
         ButtonSmall button_delete = new ButtonSmall("Entfernen","#DB4437","#CC4033","#BF3C30");
@@ -379,25 +389,10 @@ public class Layout{
         panel_footer.add(button_calc);
         button_calc.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-
-                weight_both = 0.0;
-
-                for (int i = 0; i < draggables.size(); i++) {
-                    //String s = Double.toString(draggables.get(i).getWeightInContainer());
-                    //System.out.println(s);
-
-                    weight_both += draggables.get(i).getWeightInContainer();
-                    System.out.println(draggables.get(i).getWeightInLeft());
-                    //updateInfoPanel();
-                    //Einzelne Gewichte irgendwo anzeigen lassen! (keine ahnung wo und wie...)
-                }
-                    
-                    info_both.setValue(weight_both);
-                    SwingUtilities.updateComponentTreeUI(panel_info);
-                
+                calculate();
             }
-            
         });
+        
 
         //Komponenten sichtbar machen
         panel_info.setVisible(true);
@@ -422,6 +417,35 @@ public class Layout{
 
     }
 
+    public void calculate() {
+                weight_both = 0.0;
+                weight_left = 0.0;
+                weight_right = 0.0;
+                weight_dif = 0.0;
+
+                for (int i = 0; i < draggables.size(); i++) {
+                    //String s = Double.toString(draggables.get(i).getWeightInContainer());
+                    //System.out.println(s);
+
+                    weight_both += draggables.get(i).getWeight();
+                    weight_left += draggables.get(i).getWeightInLeft();
+                    weight_right += draggables.get(i).getWeightInRight();
+                    weight_dif = Math.abs(weight_left - weight_right);
+
+                    //updateInfoPanel();
+                    //Einzelne Gewichte irgendwo anzeigen lassen! (keine ahnung wo und wie...)
+                }
+                    
+                    info_both.setValue(weight_both);
+                    info_left.setValue(weight_left);
+                    info_right.setValue(weight_right);
+                    info_dif.setValue(weight_dif);
+                    SwingUtilities.updateComponentTreeUI(panel_info);
+    }
+
+
+
+/*
     public double getWeightInLeft(){
         double weight = 0.0;
         
@@ -436,7 +460,8 @@ public class Layout{
         }
 
         return weight;
-    }
 
+    }
+*/
 
 }

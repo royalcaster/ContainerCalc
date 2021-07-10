@@ -175,7 +175,7 @@ public class Draggable extends JPanel{
                 return getWeightInContainer();
             }
             else {
-                        if (getX()<501) {
+                        if (getX()<499) {
                             double weight = 0;
 
                             //Beginn des Pakets bis erste Grenze
@@ -185,7 +185,7 @@ public class Draggable extends JPanel{
                             if (getNextBorder(getX()) != getPrevBorder(getX()+getWidth())) {
                                 //Schleife für den Fall, dass mehr als 2 Zonen beansprucht werden
 
-                                for (int i = getNextBorder(getX()); i < 500; i += 1000/6) {
+                                for (int i = getNextBorder(getX()); i < 490; i += 1000/6) {
                                     weight += (1000.0/6.0) / getWidth() * package_weight * getFactor(Math.ceil(i / (1000/6))+1);
                                     
                                     //System.out.println("Faktor: " + (Math.ceil(i / (1000/6))+1));
@@ -205,9 +205,60 @@ public class Draggable extends JPanel{
                         else {return 0;}
             }
         }
+
+        public double getWeightInRight(){
+            //Idee: gleicher ABlauf wie in getWeightInContainer() aber i kann nicht größer als 500 werden
+            /*Struktur:
+            if (isOnlyInLeft()) {
+                getWeightInContainer
+            }
+            else (!isOnlyInLeft()) {
+                getWeightInContainer, aber i nicht größer 500 und wenn getX größer 500, gib 0 zurück
+            }
+            */ 
+
+            if (isOnlyInRight()) {
+                return getWeightInContainer();
+            }
+            else {
+                        if (getX()+getWidth()>499) {
+                            double weight = 0;
+
+                            //Beginn des Pakets bis erste Grenze
+                            //weight = ((double) getNextBorder(getX()) - getX()) / (double) getWidth() * package_weight * getFactor(Math.ceil(1.0 * getX()/(1000/6)));
+                        
+
+                            if (getNextBorder(getX()) != getPrevBorder(getX()+getWidth())) {
+                                //Schleife für den Fall, dass mehr als 2 Zonen beansprucht werden
+
+                                for (int i = 499; i < getPrevBorder(getX()+getWidth()) - 5; i += 1000/6) {
+                                    weight += (1000.0/6.0) / getWidth() * package_weight * getFactor(Math.ceil(i / (1000/6))+1);
+                                    
+                                    //System.out.println("Faktor: " + (Math.ceil(i / (1000/6))+1));
+                                    //System.out.println("i: " + i);
+                                }
+
+                                //System.out.println(getNextBorder(getX()) + " | " + getPrevBorder(getX()+getWidth()));
+                            }
+
+                            //Letzte Grenze bis Ende Packstück
+                            weight += (double) (getX()+getWidth() - getPrevBorder(getX()+getWidth())) / (double) getWidth() * package_weight * (getFactor(getNextBorder(getX()+getWidth()) / (1000/6)));
+
+                            
+
+                            return  weight;   
+                        }
+                        else {return 0;}
+            }
+        }
         
         public boolean isOnlyInLeft() {
             if (getX()+getWidth() < 501) {return true;}
+            else {return false;}
+        }
+
+        public boolean isOnlyInRight() {
+            if (getX() > 500) {return true;}
             else {return false;}
         }
 
@@ -222,6 +273,10 @@ public class Draggable extends JPanel{
 
         public int getPrevBorder(int n) {
             return (int) (Math.floor(1.0 * n / (1000/6)) * 1000/6);
+        }
+
+        public double getWeight() {
+            return (double) package_weight;
         }
 
         public int getFactor(double n) {
