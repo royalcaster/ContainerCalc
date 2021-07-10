@@ -387,10 +387,11 @@ public class Layout{
                     //System.out.println(s);
 
                     weight_both += draggables.get(i).getWeightInContainer();
+                    System.out.println(draggables.get(i).getWeightInLeft());
                     //updateInfoPanel();
                     //Einzelne Gewichte irgendwo anzeigen lassen! (keine ahnung wo und wie...)
                 }
-                
+                    
                     info_both.setValue(weight_both);
                     SwingUtilities.updateComponentTreeUI(panel_info);
                 

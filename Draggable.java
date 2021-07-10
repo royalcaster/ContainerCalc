@@ -2,6 +2,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import jdk.tools.jlink.internal.SymLinkResourcePoolEntry;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -124,10 +126,8 @@ public class Draggable extends JPanel{
 
             double weight = 0;
 
-            // IF statement muss überarbeitet werden!!! Wenn kleiner als (1000/6), kann es trotzdem auf einer Grenze liegen!
-
             //Wenn package nur in einer zone liegt, liefere das gewicht * faktor
-            if (getWidth() <= 1000/6) {
+            if (isBetweenBorders()) {
                 return package_weight * (getFactor(getNextBorder(getX()+getWidth()) / (1000/6)));
             }
             //wenn das package sich über mehrere zonen streckt
@@ -160,10 +160,57 @@ public class Draggable extends JPanel{
             }
         }
 
-        public void getWeightInBorders(int b){
+        public double getWeightInLeft(){
             //Idee: gleicher ABlauf wie in getWeightInContainer() aber i kann nicht größer als 500 werden
+            /*Struktur:
+            if (isOnlyInLeft()) {
+                getWeightInContainer
+            }
+            else (!isOnlyInLeft()) {
+                getWeightInContainer, aber i nicht größer 500 und wenn getX größer 500, gib 0 zurück
+            }
+            */ 
+
+            if (isOnlyInLeft()) {
+                return getWeightInContainer();
+            }
+            else {
+                        if (getX()<501) {
+                            double weight = 0;
+
+                            //Beginn des Pakets bis erste Grenze
+                            weight = ((double) getNextBorder(getX()) - getX()) / (double) getWidth() * package_weight * getFactor(Math.ceil(1.0 * getX()/(1000/6)));
+                        
+
+                            if (getNextBorder(getX()) != getPrevBorder(getX()+getWidth())) {
+                                //Schleife für den Fall, dass mehr als 2 Zonen beansprucht werden
+
+                                for (int i = getNextBorder(getX()); i < 500; i += 1000/6) {
+                                    weight += (1000.0/6.0) / getWidth() * package_weight * getFactor(Math.ceil(i / (1000/6))+1);
+                                    
+                                    //System.out.println("Faktor: " + (Math.ceil(i / (1000/6))+1));
+                                    //System.out.println("i: " + i);
+                                }
+
+                                //System.out.println(getNextBorder(getX()) + " | " + getPrevBorder(getX()+getWidth()));
+                            }
+
+                            //Letzte Grenze bis Ende Packstück
+                            //weight += (double) (getX()+getWidth() - getPrevBorder(getX()+getWidth())) / (double) getWidth() * package_weight * (getFactor(getNextBorder(getX()+getWidth()) / (1000/6)));
+
+                            
+
+                            return  weight;   
+                        }
+                        else {return 0;}
+            }
         }
         
+        public boolean isOnlyInLeft() {
+            if (getX()+getWidth() < 501) {return true;}
+            else {return false;}
+        }
+
         public void rotate(){
             setSize(new Dimension(getHeight(),getWidth()));
             SwingUtilities.updateComponentTreeUI(panel_content);
@@ -186,6 +233,15 @@ public class Draggable extends JPanel{
                 case 5: return 2;
                 case 6: return 3;
                 default: return 0;
+            }
+        }
+
+        public boolean isBetweenBorders() {
+            if ( getFactor( getX() / (1000/6) ) == getFactor( ( getX() + getWidth() ) / (1000/6) ) ) {
+                return true;
+            }
+            else {
+                return false;
             }
         }
 }
