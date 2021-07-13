@@ -28,8 +28,10 @@ import jdk.swing.interop.SwingInterOpUtils;
 public class Layout{
 
     Package pack;
+    Draggable drag;
     Representer representer;
-    int selection_index;
+    double max_dif;
+
 
     ArrayList<Package> packages;
     ArrayList<Representer> representers;
@@ -270,7 +272,7 @@ public class Layout{
         button_draw.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e){
                 if (!packages.isEmpty()) {  
-                    Draggable drag = new Draggable(packages.get(packages.size()-1));
+                    drag = new Draggable(packages.get(packages.size()-1));
                     draggables.add(drag);
                     panel_container.add(drag);
                     packages.remove(packages.get(packages.size()-1));
@@ -431,6 +433,7 @@ public class Layout{
                     weight_left += draggables.get(i).getWeightInLeft();
                     weight_right += draggables.get(i).getWeightInRight();
                     weight_dif = Math.abs(weight_left - weight_right);
+                    System.out.println(draggables.get(i).isBetweenBorders());
 
                     //updateInfoPanel();
                     //Einzelne Gewichte irgendwo anzeigen lassen! (keine ahnung wo und wie...)
@@ -440,9 +443,26 @@ public class Layout{
                     info_left.setValue(weight_left);
                     info_right.setValue(weight_right);
                     info_dif.setValue(weight_dif);
+
+                    if (weight_left > weight_right) {
+                        max_dif = weight_right / 10;
+                    }
+                    else {max_dif = weight_left / 10;}
+
+                    if (weight_dif < max_dif) {
+                        info_dif.setGreen();
+                        System.out.println("true");
+                    }
+                    else {info_dif.setRed();
+                    System.out.println("false");}
+
                     SwingUtilities.updateComponentTreeUI(panel_info);
     }
 
+    /*public boolean bordersClean() {
+
+    }
+    */
 
 
 /*

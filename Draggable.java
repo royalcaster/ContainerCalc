@@ -292,7 +292,7 @@ public class Draggable extends JPanel{
         }
 
         public boolean isBetweenBorders() {
-            if ( getFactor( getX() / (1000/6) ) == getFactor( ( getX() + getWidth() ) / (1000/6) ) ) {
+            if ( Math.ceil(getX() / (1000/6) ) == Math.ceil( ( getX() + getWidth() ) / (1000/6) ) ) {
                 return true;
             }
             else {

@@ -31,4 +31,12 @@ JLabel number;
         int b = (int) n;
         number.setText(b + " kg"); 
     }
+
+    public void setGreen() {
+        number.setForeground(Color.decode("#0F9D58"));
+    }
+
+    public void setRed() {
+        number.setForeground(Color.decode("#DB4437"));
+    }
 }
