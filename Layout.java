@@ -1,14 +1,17 @@
-import java.awt.Color;
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseMotionListener;
 import java.security.spec.RSAPrivateCrtKeySpec;
+import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -16,9 +19,13 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.synth.SynthSplitPaneUI;
+import javax.swing.filechooser.*;
+import javax.imageio.*;
 
 //import jdk.internal.module.SystemModuleFinders;
 
@@ -33,7 +40,7 @@ public class Layout{
     Draggable drag;
     Representer representer;
     double max_dif;
-
+    File fileToSave;
 
     ArrayList<Package> packages;
     ArrayList<Representer> representers;
@@ -361,6 +368,26 @@ public class Layout{
         Button button_save = new Button("Speichern", "#007ACC", "#0070BA", "#0065A8");
         Button button_export = new Button("Exportieren","#DB4437","#CC4033","#BF3C30");
 
+        button_export.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                try {
+                    export();
+                } catch (ClassNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (InstantiationException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (IllegalAccessException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (UnsupportedLookAndFeelException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
         panel_buttons.add(button_load);
         panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
         panel_buttons.add(button_save);
@@ -396,7 +423,6 @@ public class Layout{
                 calculate();
             }
         });
-        
 
         //Komponenten sichtbar machen
         panel_info.setVisible(true);
@@ -490,6 +516,43 @@ public class Layout{
         }
         else {
             return true;
+        }
+    }
+
+    public static BufferedImage printContainer(JPanel j) throws AWTException {     
+        Point p = j.getLocationOnScreen();
+        Dimension dim = j.getSize();
+        Rectangle rect = new Rectangle(p, dim);
+
+        Robot robot = new Robot();  
+        return robot.createScreenCapture(rect);
+    }
+
+    public void export() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+        //Filechoser für PDF des Containers
+        // parent component of the dialog
+        JFrame parentFrame = new JFrame();
+        
+        JFileChooser fileChooser = new JFileChooser();
+
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+
+        fileChooser.setDialogTitle("Speicherort auswählen");   
+ 
+        int userSelection = fileChooser.showSaveDialog(parentFrame);
+ 
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            fileToSave = fileChooser.getSelectedFile();
+        }
+
+        try {
+            ImageIO.write(printContainer(panel_container), "jpg", fileToSave);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (AWTException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
