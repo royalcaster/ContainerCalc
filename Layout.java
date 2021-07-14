@@ -20,6 +20,8 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.synth.SynthSplitPaneUI;
 
+//import jdk.internal.module.SystemModuleFinders;
+
 //import org.graalvm.compiler.hotspot.nodes.DimensionsNode;
 
 import jdk.swing.interop.SwingInterOpUtils;
@@ -433,7 +435,6 @@ public class Layout{
                     weight_left += draggables.get(i).getWeightInLeft();
                     weight_right += draggables.get(i).getWeightInRight();
                     weight_dif = Math.abs(weight_left - weight_right);
-                    System.out.println(draggables.get(i).isBetweenBorders());
 
                     //updateInfoPanel();
                     //Einzelne Gewichte irgendwo anzeigen lassen! (keine ahnung wo und wie...)
@@ -451,19 +452,46 @@ public class Layout{
 
                     if (weight_dif < max_dif) {
                         info_dif.setGreen();
-                        System.out.println("true");
+                        
                     }
-                    else {info_dif.setRed();
-                    System.out.println("false");}
+                    else {info_dif.setRed();}
+                    
+                    System.out.println(bordersClean());
 
                     SwingUtilities.updateComponentTreeUI(panel_info);
     }
 
-    /*public boolean bordersClean() {
+    public boolean bordersClean() {
+        /*prüfen:
+        x und y größer 0 (keine negativen werte)
+        x + breite kleiner 1000 und y + höhe kleiner 400
+        wenn beide erfüllt return true
+        */
+        for (int i = 0; i < draggables.size(); i++) {
+            if (!draggableInBorders(draggables.get(i))) {
+                draggables.get(i).mark();
+                SwingUtilities.updateComponentTreeUI(panel_container);
+                return false;
+         
+            }
+        }
 
+        for (int i = 0; i < draggables.size(); i++) {draggables.get(i).validate();}
+        return true;
     }
-    */
-
+    
+    public boolean draggableInBorders(Draggable d) {
+        if ((d.getX() < 1)
+            || (d.getY() < 1)
+            || (d.getX()+d.getWidth() > 1000)
+            || (d.getY()+d.getHeight() > 400)
+            ) {
+                return false;
+        }
+        else {
+            return true;
+        }
+    }
 
 /*
     public double getWeightInLeft(){

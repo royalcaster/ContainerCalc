@@ -299,4 +299,12 @@ public class Draggable extends JPanel{
                 return false;
             }
         }
+
+        public void mark(){
+            panel_content.setBackground(Color.decode("#DB4437"));
+        }
+
+        public void validate(){
+            panel_content.setBackground(Color.decode("#007ACC"));
+        }
 }
