@@ -17,15 +17,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.BorderUIResource;
+import javax.swing.plaf.DimensionUIResource;
 import javax.swing.plaf.synth.SynthSplitPaneUI;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.text.Document;
 
 import javax.swing.filechooser.*;
@@ -68,6 +73,7 @@ public class Layout{
     Double weight_dif;
 
     JTable table;
+    JScrollPane scrollpane;
 
     public Layout(){
 
@@ -400,17 +406,24 @@ public class Layout{
 
         button_save.addMouseListener(new MouseAdapter(){
             public void mousePressed(MouseEvent e) {
-                JFrame frame = new JFrame();
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setLocationRelativeTo(null);
+                JFrame frame = new JFrame("Übersicht Packstücke");
                 frame.setSize(new Dimension(1280, 720)); 
+                frame.setLocationRelativeTo(null);
+                frame.setBackground(Color.decode("#1E1E1E"));
 
                 JPanel panel_content = new JPanel();
                 panel_content.setBackground(Color.decode("#1E1E1E"));
-                panel_content.setLayout(new GridLayout(1,1));
+                panel_content.setLayout(new BoxLayout(panel_content, BoxLayout.Y_AXIS));
+                panel_content.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
 
+                /*
+                scrollpane = new JScrollPane(wrapPackagelist());
+                scrollpane.setBackground(Color.decode("#1E1E1E"));
+                scrollpane.getViewport().setBackground(Color.decode("#1E1E1E"));
+                scrollpane.setBorder(BorderFactory.createEmptyBorder());
+                panel_content.add(scrollpane);
+                */
                 panel_content.add(wrapPackagelist());
-
                 frame.add(panel_content);
                 frame.setVisible(true);
             }
@@ -586,46 +599,71 @@ public class Layout{
     }
 
     public JTable wrapPackagelist() {
-        String[][] data = null; 
-        for (int i = 0; i < packages.size(); i++) {
-            data[i][0] = Integer.toString(i);
-            data[i][1] = packages.get(i).getShorter();
-            data[i][2] = packages.get(i).getName();
-            data[i][3] = Integer.toString(packages.get(i).getWidth());
-            data[i][4] = Integer.toString(packages.get(i).getLength());
-            data[i][5] = Integer.toString(packages.get(i).getHeight());
-            data[i][6] = Integer.toString(packages.get(i).getWeight());
-            data[i][7] = (draggables.get(i).getX()) + " | " + (draggables.get(i).getY());
 
-        }
+        String[][] data = new String[draggables.size()+1][8]; 
 
-        String[] column = {"Index" ,"Abkürzung", "Bezeichnung", "Breite", "Länge", "Höhe", "Gewicht", "Position"};
+        data[0][0] = "Index";
+        data[0][1] = "Abkürzung";
+        data[0][2] = "Bezeichnung";
+        data[0][3] = "Breite";
+        data[0][4] = "Länge";
+        data[0][5] = "Höhe";
+        data[0][6] = "Gewicht";
+        data[0][7] = "Position";
 
-        table = new JTable(data, column);
-        return table;
-    }
-
-    public void writePDF(){
-        
-    }
-
-/*
-    public double getWeightInLeft(){
-        double weight = 0.0;
-        
         for (int i = 0; i < draggables.size(); i++) {
-            //Wenn Draggable in Linker hälfte ohne überschneidung
-            if (draggables.get(i).getX()+draggables.get(i).getWidth() < 501) {
-                weight += draggables.get(i).getWeightInContainer();
-            }
-            else if (draggables.get(i).getX() < 501 && draggables.get(i).getX()+draggables.get(i).getWidth() > 500) {
-                weight += draggables.get(i).getWeightInBorders(501);
-            }
+            data[i+1][0] = Integer.toString(i);
+            data[i+1][1] = draggables.get(i).getShorter();
+            data[i+1][2] = draggables.get(i).getName();
+            data[i+1][3] = Integer.toString(draggables.get(i).getWidth());
+            data[i+1][4] = Integer.toString(draggables.get(i).getLength());
+            data[i+1][5] = Integer.toString(draggables.get(i).getHeight());
+            data[i+1][6] = Double.toString(draggables.get(i).getWeight());
+            data[i+1][7] = (draggables.get(i).getX()) + " | " + (draggables.get(i).getY());
+
         }
 
-        return weight;
+        String[] column = {" Index" ," Abkürzung", " Bezeichnung", "Breite ", "Länge ", "Höhe ", "Gewicht ", "Position "};
 
-    }
-*/
+        table = new JTable(data, column) 
+            {
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+            Component returnComp = super.prepareRenderer(renderer, row, column);
+            Color alternateColor = Color.decode("#333333");
+            Color whiteColor = Color.decode("#1E1E1E");
+            if (!returnComp.getBackground().equals(getSelectionBackground())){
+            Color bg = (row % 2 == 0 ? alternateColor : whiteColor);
+            returnComp.setBackground(bg);
+            bg = null;
+            }
+            return returnComp;
+            };
+        };
+        table.setForeground(Color.white);
+        table.setBackground(Color.decode("#1E1E1E"));
+        table.setBorder(BorderFactory.createEmptyBorder(30, 30,30,30));
+        table.setRowSelectionAllowed(false);
+        table.setFont(new Font("Arial", Font.PLAIN, 15));
+        table.setSelectionBackground(Color.green);
+        table.setSelectionForeground(Color.decode("#1E1E1E"));
+        table.setRowHeight(30);
+        table.setEnabled(false);
+        table.setShowGrid(true);
+        table.setAlignmentX(SwingConstants.CENTER);
+        table.setGridColor(Color.decode("#545454"));
+        //table.setIntercellSpacing(new Dimension(20,0));
+        
 
+        //Versuch, alle zahlen rechts zu alignen
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+
+        for (int i = 3; i < 8; i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
+        }
+        
+        //Versuch, jede zweite Grau zu machen
+        
+        return table;
+        }
 }

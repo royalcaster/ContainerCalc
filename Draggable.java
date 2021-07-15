@@ -18,6 +18,11 @@ public class Draggable extends JPanel{
     int package_x;
     JPanel panel_content;
     int package_weight;
+    int package_width;
+    int package_height;
+    String package_name;
+    int package_length;
+    String package_shorter;
 
     public Draggable(Package p){
         setBounds(30,30,p.getWidth(), p.getLength());
@@ -25,6 +30,12 @@ public class Draggable extends JPanel{
         setLayout(new GridLayout(1,1));
         
         package_weight = p.getWeight();
+        package_shorter = p.getShorter();
+        package_name = p.getName();
+        package_weight = p.getWeight();
+        package_width = p.getWidth();
+        package_height = p.getHeight();
+        package_length = p.getLength();
 
         panel_content = new JPanel();
         panel_content.setLayout(new BoxLayout(panel_content, BoxLayout.X_AXIS));
@@ -273,6 +284,26 @@ public class Draggable extends JPanel{
 
         public int getPrevBorder(int n) {
             return (int) (Math.floor(1.0 * n / (1000/6)) * 1000/6);
+        }
+
+        public String getName() {
+            return package_name;
+        }
+
+        public String getShorter() {
+            return package_shorter;
+        }
+
+        public int getWidth() {
+            return package_width;
+        }
+
+        public int getLength() {
+            return package_length;
+        }
+
+        public int getHeight() {
+            return package_height;
         }
 
         public double getWeight() {
