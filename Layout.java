@@ -6,6 +6,7 @@ import java.security.spec.RSAPrivateCrtKeySpec;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -16,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -41,6 +43,7 @@ public class Layout{
     Representer representer;
     double max_dif;
     File fileToSave;
+    File fileToSave2;
 
     ArrayList<Package> packages;
     ArrayList<Representer> representers;
@@ -49,6 +52,8 @@ public class Layout{
     JPanel panel_packagelist;
     JPanel panel_container;
     JPanel panel_info;
+
+    JFrame frame_main;
 
     Info info_left;
     Info info_right;
@@ -59,6 +64,8 @@ public class Layout{
     Double weight_left;
     Double weight_right;
     Double weight_dif;
+
+    JTable table;
 
     public Layout(){
 
@@ -71,8 +78,10 @@ public class Layout{
 
         weight_both = 0.0;
 
+        //Filechoser kurz anzeigen lassen, damit der Bug mit LookAndFeel von Win11 verschwindet
+
         //Fenster
-        JFrame frame_main = new JFrame("ContainerCalc");
+        frame_main = new JFrame("ContainerCalc");
         frame_main.setSize(1280,720);
         frame_main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame_main.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -539,10 +548,12 @@ public class Layout{
 
         fileChooser.setDialogTitle("Speicherort auswählen");   
  
-        int userSelection = fileChooser.showSaveDialog(parentFrame);
- 
+        int userSelection = fileChooser.showSaveDialog(frame_main);
+        
         if (userSelection == JFileChooser.APPROVE_OPTION) {
-            fileToSave = fileChooser.getSelectedFile();
+            fileToSave = new File(fileChooser.getSelectedFile() + ".jpg");
+            fileToSave2 = new File(fileChooser.getSelectedFile() + "_Daten.pdf");
+
         }
 
         try {
@@ -554,6 +565,23 @@ public class Layout{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public JTable wrapPackagelist() {
+        String[][] data = null; 
+        for (int i = 0; i < packages.size(); i++) {
+            data[i][0] = packages.get(i).getShorter();
+            data[i][1] = packages.get(i).getName();
+            data[i][2] = Integer.toString(packages.get(i).getWidth());
+            data[i][3] = Integer.toString(packages.get(i).getLength());
+            data[i][4] = Integer.toString(packages.get(i).getHeight());
+            data[i][5] = Integer.toString(packages.get(i).getWeight());
+        }
+
+        String[] column = {"Abkürzung", "Name", "Breite", "Länge", "Höhe", "Gewicht"};
+
+        table = new JTable(data, column);
+        return table;
     }
 
 /*

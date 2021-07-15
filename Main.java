@@ -4,6 +4,12 @@ public class Main {
     }
 }
 
+//BAUSTELLEN
+
+//Scheiss bug mit windows look and feel im filechoser
+
+
+
 //NÄCHSTE SCHRITTE
 
 // Methode, die prüft, ob alle Draggables im container liegen (bezogen auf die Grenzen des JPanels)
