@@ -26,6 +26,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.BorderUIResource;
 import javax.swing.plaf.synth.SynthSplitPaneUI;
+import javax.swing.text.Document;
+
 import javax.swing.filechooser.*;
 import javax.imageio.*;
 
@@ -372,9 +374,8 @@ public class Layout{
         panel_buttons.setBackground(Color.decode("#1E1E1E"));
         panel_buttons.setLayout(new BoxLayout(panel_buttons, BoxLayout.Y_AXIS));
 
-        //Knöpfe zum Testen
-        Button button_load = new Button("Laden", "#007ACC", "#0070BA", "#0065A8");
-        Button button_save = new Button("Speichern", "#007ACC", "#0070BA", "#0065A8");
+        //Knöpfe zum Testen 
+        Button button_save = new Button("Übersicht anzeigen", "#007ACC", "#0070BA", "#0065A8");
         Button button_export = new Button("Exportieren","#DB4437","#CC4033","#BF3C30");
 
         button_export.addMouseListener(new MouseAdapter() {
@@ -397,7 +398,24 @@ public class Layout{
             }
         });
 
-        panel_buttons.add(button_load);
+        button_save.addMouseListener(new MouseAdapter(){
+            public void mousePressed(MouseEvent e) {
+                JFrame frame = new JFrame();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setLocationRelativeTo(null);
+                frame.setSize(new Dimension(1280, 720)); 
+
+                JPanel panel_content = new JPanel();
+                panel_content.setBackground(Color.decode("#1E1E1E"));
+                panel_content.setLayout(new GridLayout(1,1));
+
+                panel_content.add(wrapPackagelist());
+
+                frame.add(panel_content);
+                frame.setVisible(true);
+            }
+        });
+
         panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
         panel_buttons.add(button_save);
         panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
@@ -570,18 +588,25 @@ public class Layout{
     public JTable wrapPackagelist() {
         String[][] data = null; 
         for (int i = 0; i < packages.size(); i++) {
-            data[i][0] = packages.get(i).getShorter();
-            data[i][1] = packages.get(i).getName();
-            data[i][2] = Integer.toString(packages.get(i).getWidth());
-            data[i][3] = Integer.toString(packages.get(i).getLength());
-            data[i][4] = Integer.toString(packages.get(i).getHeight());
-            data[i][5] = Integer.toString(packages.get(i).getWeight());
+            data[i][0] = Integer.toString(i);
+            data[i][1] = packages.get(i).getShorter();
+            data[i][2] = packages.get(i).getName();
+            data[i][3] = Integer.toString(packages.get(i).getWidth());
+            data[i][4] = Integer.toString(packages.get(i).getLength());
+            data[i][5] = Integer.toString(packages.get(i).getHeight());
+            data[i][6] = Integer.toString(packages.get(i).getWeight());
+            data[i][7] = (draggables.get(i).getX()) + " | " + (draggables.get(i).getY());
+
         }
 
-        String[] column = {"Abkürzung", "Name", "Breite", "Länge", "Höhe", "Gewicht"};
+        String[] column = {"Index" ,"Abkürzung", "Bezeichnung", "Breite", "Länge", "Höhe", "Gewicht", "Position"};
 
         table = new JTable(data, column);
         return table;
+    }
+
+    public void writePDF(){
+        
     }
 
 /*
