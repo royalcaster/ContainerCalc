@@ -33,6 +33,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.Document;
 
+import org.graalvm.compiler.lir.CompositeValue.Component;
+
 import javax.swing.filechooser.*;
 import javax.imageio.*;
 
@@ -74,6 +76,13 @@ public class Layout{
 
     JTable table;
     JScrollPane scrollpane;
+    String[][] data;
+    String[] column;
+    Point capture_point;
+    Rectangle capture_rectangle;
+    JLabel label_location;
+    JPanel panel_content_table;
+    JFrame frame_table;
 
     public Layout(){
 
@@ -388,16 +397,7 @@ public class Layout{
             public void mousePressed(MouseEvent e) {
                 try {
                     export();
-                } catch (ClassNotFoundException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (InstantiationException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (IllegalAccessException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (UnsupportedLookAndFeelException e1) {
+                } catch (InterruptedException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
@@ -423,14 +423,51 @@ public class Layout{
                 scrollpane.setBorder(BorderFactory.createEmptyBorder());
                 panel_content.add(scrollpane);
                 */
-                panel_content.add(wrapPackagelist());
+                panel_content.add(getDarkTable());
                 frame.add(panel_content);
                 frame.setVisible(true);
             }
         });
 
+        JPanel panel_filechoser = new JPanel();
+        panel_filechoser.setBackground(Color.decode("#1E1E1E"));
+        panel_filechoser.setLayout(new FlowLayout(FlowLayout.LEADING));
+
+        ButtonSmall button_browse = new ButtonSmall("Durchsuchen","#282829","#232324","#1E1E1F");
+        button_browse.setMaximumSize(new Dimension(60,30));
+        button_browse.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button_browse.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                try {
+                    browse();
+                } catch (ClassNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (InstantiationException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (IllegalAccessException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (UnsupportedLookAndFeelException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+        label_location = new JLabel("C/User/blablabla/Test.jpg");
+        label_location.setBackground(Color.decode("#282829"));
+        label_location.setForeground(Color.white);
+        label_location.setFont(new Font("Arial",Font.PLAIN,15));
+
+        panel_filechoser.add(button_browse);
+        panel_filechoser.add(label_location);
+
         panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
         panel_buttons.add(button_save);
+        panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
+        panel_buttons.add(panel_filechoser);
         panel_buttons.add(Box.createRigidArea(new Dimension(0,10)));
         panel_buttons.add(button_export);
 
@@ -461,6 +498,7 @@ public class Layout{
         button_calc.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 calculate();
+                showListForPic(table);
             }
         });
 
@@ -568,12 +606,13 @@ public class Layout{
         return robot.createScreenCapture(rect);
     }
 
-    public void export() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+    public void browse() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
         //Filechoser für PDF des Containers
         // parent component of the dialog
         JFrame parentFrame = new JFrame();
         
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setLocation(30,30);
 
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 
@@ -583,12 +622,18 @@ public class Layout{
         
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             fileToSave = new File(fileChooser.getSelectedFile() + ".jpg");
-            fileToSave2 = new File(fileChooser.getSelectedFile() + "_Daten.pdf");
+            fileToSave2 = new File(fileChooser.getSelectedFile() + "_Daten.jpg");
 
         }
 
+        label_location.setText(fileToSave.getPath());
+
+    }
+
+    public void export() throws InterruptedException{
         try {
             ImageIO.write(printContainer(panel_container), "jpg", fileToSave);
+            
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -598,10 +643,9 @@ public class Layout{
         }
     }
 
-    public JTable wrapPackagelist() {
-
-        String[][] data = new String[draggables.size()+1][8]; 
-
+    public void wrapPackagelist() {
+        data = new String[draggables.size()+1][8];
+        column = new String[] {" Index" ," Abkürzung", " Bezeichnung", "Breite ", "Länge ", "Höhe ", "Gewicht ", "Position "};
         data[0][0] = "Index";
         data[0][1] = "Abkürzung";
         data[0][2] = "Bezeichnung";
@@ -620,27 +664,16 @@ public class Layout{
             data[i+1][5] = Integer.toString(draggables.get(i).getHeight());
             data[i+1][6] = Double.toString(draggables.get(i).getWeight());
             data[i+1][7] = (draggables.get(i).getX()) + " | " + (draggables.get(i).getY());
-
         }
+    }
 
-        String[] column = {" Index" ," Abkürzung", " Bezeichnung", "Breite ", "Länge ", "Höhe ", "Gewicht ", "Position "};
+    public JTable getBrightTable() {
+        wrapPackagelist();
 
-        table = new JTable(data, column) 
-            {
-            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-            Component returnComp = super.prepareRenderer(renderer, row, column);
-            Color alternateColor = Color.decode("#333333");
-            Color whiteColor = Color.decode("#1E1E1E");
-            if (!returnComp.getBackground().equals(getSelectionBackground())){
-            Color bg = (row % 2 == 0 ? alternateColor : whiteColor);
-            returnComp.setBackground(bg);
-            bg = null;
-            }
-            return returnComp;
-            };
-        };
-        table.setForeground(Color.white);
-        table.setBackground(Color.decode("#1E1E1E"));
+        table = new JTable(data, column);
+
+        table.setForeground(Color.black);
+        table.setBackground(Color.white);
         table.setBorder(BorderFactory.createEmptyBorder(30, 30,30,30));
         table.setRowSelectionAllowed(false);
         table.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -648,7 +681,7 @@ public class Layout{
         table.setSelectionForeground(Color.decode("#1E1E1E"));
         table.setRowHeight(30);
         table.setEnabled(false);
-        table.setShowGrid(true);
+        table.setShowGrid(false);
         table.setAlignmentX(SwingConstants.CENTER);
         table.setGridColor(Color.decode("#545454"));
         //table.setIntercellSpacing(new Dimension(20,0));
@@ -665,5 +698,71 @@ public class Layout{
         //Versuch, jede zweite Grau zu machen
         
         return table;
+        }
+
+        public JTable getDarkTable() {
+            wrapPackagelist();
+    
+            table = new JTable(data, column) 
+                {
+                public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component returnComp = super.prepareRenderer(renderer, row, column);
+                Color alternateColor = Color.decode("#333333");
+                Color whiteColor = Color.decode("#1E1E1E");
+                if (!returnComp.getBackground().equals(getSelectionBackground())){
+                Color bg = (row % 2 == 0 ? alternateColor : whiteColor);
+                returnComp.setBackground(bg);
+                bg = null;
+                }
+                return returnComp;
+                };
+            };
+            table.setForeground(Color.white);
+            table.setBackground(Color.decode("#1E1E1E"));
+            table.setBorder(BorderFactory.createEmptyBorder(30, 30,30,30));
+            table.setRowSelectionAllowed(false);
+            table.setFont(new Font("Arial", Font.PLAIN, 15));
+            table.setSelectionBackground(Color.green);
+            table.setSelectionForeground(Color.decode("#1E1E1E"));
+            table.setRowHeight(30);
+            table.setEnabled(false);
+            table.setShowGrid(false);
+            table.setAlignmentX(SwingConstants.CENTER);
+            table.setGridColor(Color.decode("#545454"));
+            //table.setIntercellSpacing(new Dimension(20,0));
+            
+    
+            //Versuch, alle zahlen rechts zu alignen
+            DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+            rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+    
+            for (int i = 3; i < 8; i++) {
+                table.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
+            }
+            
+            //Versuch, jede zweite Grau zu machen
+            
+            return table;
+            }
+
+        public void showListForPic(JTable table) {
+            frame_table = new JFrame();
+            frame_table.setSize(new Dimension(1280,720));
+            frame_table.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+            panel_content_table = new JPanel();
+            panel_content_table.setLayout(new BoxLayout(panel_content_table, BoxLayout.Y_AXIS));
+            panel_content_table.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
+
+            capture_point = new Point(frame_table.getContentPane().getX(),frame_table.getContentPane().getY());
+            capture_rectangle = new Rectangle(frame_table.getContentPane().getWidth(),frame_table.getContentPane().getHeight());
+
+            JTable t = getBrightTable();
+            t.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
+
+            panel_content_table.add(t);
+            frame_table.add(panel_content_table);
+
+            frame_table.setVisible(true);
         }
 }

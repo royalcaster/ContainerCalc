@@ -6,13 +6,12 @@ public class Main {
 
 //BAUSTELLEN
 
-//Scheiss bug mit windows look and feel im filechoser
-
+//Filechoser hat altes windows Look and Feel
+//statt jframe und foto lieber PDF erstellen -> recherche
 
 
 //NÄCHSTE SCHRITTE
 
-// Methode, die prüft, ob alle Draggables im container liegen (bezogen auf die Grenzen des JPanels)
 // Methode, die prüft, ob alle Draggables NICHT übereinander liegen (sich in irgendeiner form überschneiden) -> papa fragen, ob nötig wegen eventuellem stapeln
 
 
