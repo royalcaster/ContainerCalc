@@ -5,6 +5,7 @@ import java.awt.event.MouseMotionListener;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.awt.image.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
@@ -33,10 +34,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.Document;
 
-import org.graalvm.compiler.lir.CompositeValue.Component;
+import org.graalvm.compiler.lir.alloc.trace.ShadowedRegisterValue;
 
 import javax.swing.filechooser.*;
 import javax.imageio.*;
+
 
 //import jdk.internal.module.SystemModuleFinders;
 
@@ -83,6 +85,12 @@ public class Layout{
     JLabel label_location;
     JPanel panel_content_table;
     JFrame frame_table;
+
+    Axis axis_1;
+    Axis axis_2;
+    Axis axis_3;
+    Axis axis_4;
+    Axis axis_5;
 
     public Layout(){
 
@@ -291,11 +299,11 @@ public class Layout{
         panel_container_outer.add(panel_container);
 
         //Achsen für Einteilung
-        Axis axis_1 = new Axis(167);
-        Axis axis_2 = new Axis(333);
-        Axis axis_3 = new Axis(666);
-        Axis axis_4 = new Axis(833);
-        Axis axis_5 = new Axis(500);
+        axis_1 = new Axis(167);
+        axis_2 = new Axis(333);
+        axis_3 = new Axis(666);
+        axis_4 = new Axis(833);
+        axis_5 = new Axis(500);
 
         panel_container.add(axis_1);
         panel_container.add(axis_2);
@@ -400,6 +408,9 @@ public class Layout{
                 } catch (InterruptedException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
                 }
             }
         });
@@ -456,7 +467,7 @@ public class Layout{
             }
         });
 
-        label_location = new JLabel("C/User/blablabla/Test.jpg");
+        label_location = new JLabel("-");
         label_location.setBackground(Color.decode("#282829"));
         label_location.setForeground(Color.white);
         label_location.setFont(new Font("Arial",Font.PLAIN,15));
@@ -498,7 +509,6 @@ public class Layout{
         button_calc.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 calculate();
-                showListForPic(table);
             }
         });
 
@@ -621,8 +631,8 @@ public class Layout{
         int userSelection = fileChooser.showSaveDialog(frame_main);
         
         if (userSelection == JFileChooser.APPROVE_OPTION) {
-            fileToSave = new File(fileChooser.getSelectedFile() + ".jpg");
-            fileToSave2 = new File(fileChooser.getSelectedFile() + "_Daten.jpg");
+            fileToSave = new File(fileChooser.getSelectedFile() + "_Schaubild.jpg");
+            fileToSave2 = new File(fileChooser.getSelectedFile() + "_Daten.txt");
 
         }
 
@@ -630,10 +640,11 @@ public class Layout{
 
     }
 
-    public void export() throws InterruptedException{
+    public void export() throws InterruptedException, IOException{
+
         try {
+            //Bild vom Container als JPG
             ImageIO.write(printContainer(panel_container), "jpg", fileToSave);
-            
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -641,6 +652,41 @@ public class Layout{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        //Matrix data in Textdatei schreiben (Übersicht der packstücke)
+        FileWriter fw = new FileWriter(fileToSave2);
+        
+        try  {
+                
+                for (int i = 0; i< draggables.size(); i++) {
+                    
+                    
+                    fw.write("Index:" + "\t" + "\t" + i);
+                    fw.write("\n");
+                    fw.write("Bezeichnung:" + "\t" + draggables.get(i).getName());
+                    fw.write("\n");
+                    fw.write("Abkürzung:" + "\t" + draggables.get(i).getShorter());
+                    fw.write("\n");
+                    fw.write("Breite:" + "\t" + "\t" + Integer.toString(draggables.get(i).getWidth()));
+                    fw.write("\n");
+                    fw.write("Länge:" + "\t" + "\t" + Integer.toString(draggables.get(i).getLength()));
+                    fw.write("\n");
+                    fw.write("Höhe:" + "\t" + "\t" + Integer.toString(draggables.get(i).getHeight()));
+                    fw.write("\n");
+                    fw.write("Gewicht:" + "\t" + Double.toString(draggables.get(i).getWeight()));
+                    fw.write("\n");
+                    fw.write("Position:" + "\t" + draggables.get(i).getX() + " | " + draggables.get(i).getY());
+                    fw.write("\n");
+                    fw.flush();
+                    
+                    fw.write("\n");
+                }
+                
+        }
+        finally {
+            fw.close();
+        }
+
     }
 
     public void wrapPackagelist() {
@@ -764,5 +810,23 @@ public class Layout{
             frame_table.add(panel_content_table);
 
             frame_table.setVisible(true);
+        }
+
+        public void showGrid(boolean b) {
+            if (b) {
+                panel_container.add(axis_1);
+                panel_container.add(axis_2);
+                panel_container.add(axis_3);
+                panel_container.add(axis_4);
+                panel_container.add(axis_5);
+            }
+            else {
+                panel_container.remove(axis_1);
+                panel_container.remove(axis_2);
+                panel_container.remove(axis_3);
+                panel_container.remove(axis_4);
+                panel_container.remove(axis_5);
+            }
+            SwingUtilities.updateComponentTreeUI(panel_container);
         }
 }
