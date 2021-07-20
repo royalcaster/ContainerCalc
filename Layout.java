@@ -13,6 +13,7 @@ import java.awt.image.*;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -34,6 +35,7 @@ import javax.swing.plaf.synth.SynthSplitPaneUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.Document;
+import javax.swing.ImageIcon;
 
 import org.graalvm.compiler.lir.alloc.trace.ShadowedRegisterValue;
 
@@ -117,7 +119,14 @@ public class Layout{
         frame_main.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame_main.getContentPane().setBackground(Color.decode("#1E1E1E"));
 
-         
+        //Logo einlesen
+        try {
+            BufferedImage img = ImageIO.read(new File("main_logo.png"));
+            frame_main.setIconImage(img);
+        } catch (IOException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        }
 
         //Layered Pane
         JLayeredPane layered_pane = new JLayeredPane();
@@ -392,6 +401,12 @@ public class Layout{
         panel_info_inner2.setBackground(Color.decode("#1E1E1E"));
         panel_info_inner2.setLayout(new BoxLayout(panel_info_inner2, BoxLayout.X_AXIS));
 
+        //Logo schrift
+        ImageIcon img_brand = new ImageIcon("main_brand.png");
+
+        JLabel brand_label = new JLabel();
+        brand_label.setIcon(img_brand);
+
         panel_info.add(Box.createRigidArea(new Dimension(0,40)));
         panel_info.add(panel_info_inner1);
         panel_info.add(Box.createRigidArea(new Dimension(0,10)));
@@ -500,6 +515,7 @@ public class Layout{
         info_dif = new Info("Differenz");
         info_both = new Info("Gesamt");
 
+        panel_info_inner1.add(brand_label);
         panel_info_inner1.add(Box.createRigidArea(new Dimension(80,0)));
         panel_info_inner1.add(info_left);
         panel_info_inner1.add(Box.createRigidArea(new Dimension(100,0)));
