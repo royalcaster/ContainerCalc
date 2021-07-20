@@ -92,9 +92,11 @@ public class Layout{
     Axis axis_4;
     Axis axis_5;
 
+    boolean grid_visible;
+
     public Layout(){
 
-        //Arary für Packages:
+        //Objekte initialisieren
         packages = new ArrayList<>();
 
         representers = new ArrayList<>();
@@ -102,6 +104,8 @@ public class Layout{
         draggables = new ArrayList<>();
 
         weight_both = 0.0;
+
+        grid_visible = true;
 
         //Filechoser kurz anzeigen lassen, damit der Bug mit LookAndFeel von Win11 verschwindet
 
@@ -403,6 +407,11 @@ public class Layout{
 
         button_export.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
+                
+                if (!bordersClean()) {
+                    Alert alert_export = new Alert("Position der Packstücke überprüfen!","Verstanden");
+                }
+                else {
                 try {
                     export();
                 } catch (InterruptedException e1) {
@@ -412,6 +421,7 @@ public class Layout{
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
+            }
             }
         });
 
@@ -504,6 +514,14 @@ public class Layout{
         panel_footer.setLayout(new FlowLayout(SwingConstants.RIGHT));
         panel_content.add(panel_footer, BorderLayout.PAGE_END);
 
+        Button button_toggle_grid = new Button("Sektorgrenzen an/aus","#282829","#232324","#1E1E1F");
+        panel_footer.add(button_toggle_grid);
+        button_toggle_grid.addMouseListener(new MouseAdapter(){
+            public void mousePressed(MouseEvent e) {
+                toggleGrid();
+            }
+        });
+
         Button button_calc = new Button("Berechnen", "#0F9D58", "#0F9152" , "#0D854B");
         panel_footer.add(button_calc);
         button_calc.addMouseListener(new MouseAdapter() {
@@ -569,8 +587,6 @@ public class Layout{
                         
                     }
                     else {info_dif.setRed();}
-                    
-                    System.out.println(bordersClean());
 
                     SwingUtilities.updateComponentTreeUI(panel_info);
     }
@@ -681,6 +697,18 @@ public class Layout{
                     
                     fw.write("\n");
                 }
+                fw.write("\n");
+                fw.write("\n");
+                fw.write("Gesamt:");
+                fw.write("\n");
+                fw.write("\n");
+                fw.write("Gewicht linke Hälfte:" + "\t" + "\t" + "\t" + weight_left);
+                fw.write("\n");
+                fw.write("Gewicht rechte Hälfte:" + "\t" + "\t" + "\t" + weight_right);
+                fw.write("\n");
+                fw.write("Differenz:" + "\t" + "\t" + "\t" + "\t" + weight_dif);
+                fw.write("\n");
+                fw.write("Gesamtgewicht (ohne Faktoren):" + "\t" + "\t" + weight_both);
                 
         }
         finally {
@@ -812,20 +840,22 @@ public class Layout{
             frame_table.setVisible(true);
         }
 
-        public void showGrid(boolean b) {
-            if (b) {
-                panel_container.add(axis_1);
-                panel_container.add(axis_2);
-                panel_container.add(axis_3);
-                panel_container.add(axis_4);
-                panel_container.add(axis_5);
-            }
-            else {
+        public void toggleGrid() {
+            if (grid_visible) {
                 panel_container.remove(axis_1);
                 panel_container.remove(axis_2);
                 panel_container.remove(axis_3);
                 panel_container.remove(axis_4);
                 panel_container.remove(axis_5);
+                grid_visible = false;
+            }
+            else {
+                panel_container.add(axis_1);
+                panel_container.add(axis_2);
+                panel_container.add(axis_3);
+                panel_container.add(axis_4);
+                panel_container.add(axis_5);
+                grid_visible = true;
             }
             SwingUtilities.updateComponentTreeUI(panel_container);
         }
