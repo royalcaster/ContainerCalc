@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.awt.image.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -106,7 +107,7 @@ public class Layout{
         weight_both = 0.0;
 
         grid_visible = true;
-
+        
         //Filechoser kurz anzeigen lassen, damit der Bug mit LookAndFeel von Win11 verschwindet
 
         //Fenster
@@ -115,6 +116,8 @@ public class Layout{
         frame_main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame_main.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame_main.getContentPane().setBackground(Color.decode("#1E1E1E"));
+
+         
 
         //Layered Pane
         JLayeredPane layered_pane = new JLayeredPane();
@@ -407,8 +410,8 @@ public class Layout{
 
         button_export.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                
-                if (!bordersClean()) {
+
+                   if (!bordersClean()) {
                     Alert alert_export = new Alert("Position der Packstücke überprüfen!","Verstanden");
                 }
                 else {
@@ -422,7 +425,7 @@ public class Layout{
                     e1.printStackTrace();
                 }
             }
-            }
+        }
         });
 
         button_save.addMouseListener(new MouseAdapter(){
@@ -587,6 +590,8 @@ public class Layout{
                         
                     }
                     else {info_dif.setRed();}
+                    
+                    System.out.println(bordersClean());
 
                     SwingUtilities.updateComponentTreeUI(panel_info);
     }
