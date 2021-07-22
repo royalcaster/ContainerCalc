@@ -50,7 +50,7 @@ import javax.imageio.*;
 import jdk.swing.interop.SwingInterOpUtils;
 //import jdk.tools.jlink.internal.ResourcePrevisitor;
 
-public class Layout{
+public class Layout extends JPanel {
 
     Package pack;
     Draggable drag;
@@ -66,8 +66,6 @@ public class Layout{
     JPanel panel_packagelist;
     JPanel panel_container;
     JPanel panel_info;
-
-    JFrame frame_main;
 
     Info info_left;
     Info info_right;
@@ -88,6 +86,7 @@ public class Layout{
     JLabel label_location;
     JPanel panel_content_table;
     JFrame frame_table;
+    JLayeredPane layered_pane;
 
     Axis axis_1;
     Axis axis_2;
@@ -97,7 +96,7 @@ public class Layout{
 
     boolean grid_visible;
 
-    public Layout(){
+    public Layout()  {
 
         //Objekte initialisieren
         packages = new ArrayList<>();
@@ -112,27 +111,13 @@ public class Layout{
         
         //Filechoser kurz anzeigen lassen, damit der Bug mit LookAndFeel von Win11 verschwindet
 
-        //Fenster
-        frame_main = new JFrame("ContainerCalc");
-        frame_main.setSize(1280,720);
-        frame_main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame_main.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame_main.getContentPane().setBackground(Color.decode("#1E1E1E"));
-
-        //Logo einlesen
-        try {
-            BufferedImage img = ImageIO.read(new File("main_logo.png"));
-            frame_main.setIconImage(img);
-        } catch (IOException e2) {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
-        }
+        setBackground(Color.decode("#1E1E1E"));
 
         //Layered Pane
-        JLayeredPane layered_pane = new JLayeredPane();
+        layered_pane = new JLayeredPane();
         layered_pane.setLayout(new FlowLayout());
  
-        frame_main.add(layered_pane);
+        add(layered_pane);
         
         //erstes Content-Panel
         JPanel panel_content = new JPanel();
@@ -555,7 +540,7 @@ public class Layout{
         panel_packagelist.setVisible(true);
         panel_content.setVisible(true);
         layered_pane.setVisible(true);
-        frame_main.setVisible(true);
+        setVisible(true);
     }
 
     //Konzept für Select-Funktion:
@@ -665,7 +650,7 @@ public class Layout{
 
         fileChooser.setDialogTitle("Speicherort auswählen");   
  
-        int userSelection = fileChooser.showSaveDialog(frame_main);
+        int userSelection = fileChooser.showSaveDialog(layered_pane);
         
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             fileToSave = new File(fileChooser.getSelectedFile() + "_Schaubild.jpg");
