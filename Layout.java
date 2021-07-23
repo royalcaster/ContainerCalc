@@ -1,20 +1,14 @@
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.MouseMotionListener;
-import java.security.spec.RSAPrivateCrtKeySpec;
 import java.awt.image.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.awt.image.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,33 +16,14 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.event.MouseInputAdapter;
-import javax.swing.plaf.BorderUIResource;
-import javax.swing.plaf.DimensionUIResource;
-import javax.swing.plaf.synth.SynthSplitPaneUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.text.Document;
 import javax.swing.ImageIcon;
-
-import org.graalvm.compiler.lir.alloc.trace.ShadowedRegisterValue;
-
-import javax.swing.filechooser.*;
 import javax.imageio.*;
-
-
-//import jdk.internal.module.SystemModuleFinders;
-
-//import org.graalvm.compiler.hotspot.nodes.DimensionsNode;
-
-import jdk.swing.interop.SwingInterOpUtils;
-//import jdk.tools.jlink.internal.ResourcePrevisitor;
 
 public class Layout extends JPanel {
 
@@ -412,7 +387,10 @@ public class Layout extends JPanel {
             public void mousePressed(MouseEvent e) {
 
                    if (!bordersClean()) {
-                    Alert alert_export = new Alert("Position der Packstücke überprüfen!","Verstanden");
+                    Alert alert_export = new Alert("Position der Packstücke überprüfen.","Verstanden");
+                }
+                else if (label_location.getText().equalsIgnoreCase("-")) {
+                    Alert alert_file_location = new Alert("Speicherort für Export wählen.","Verstanden");
                 }
                 else {
                 try {

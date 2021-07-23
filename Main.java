@@ -8,8 +8,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.ButtonUI;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +50,10 @@ public class Main {
         intro_panel.setBackground(Color.decode("#1E1E1E"));
         intro_panel.setLayout(new BoxLayout(intro_panel, BoxLayout.Y_AXIS));
 
+        JPanel intro_panel_2 = new JPanel();
+        intro_panel_2.setBackground(Color.decode("#1E1E1E"));
+        intro_panel_2.setLayout(new BoxLayout(intro_panel_2, BoxLayout.Y_AXIS));
+
         JLabel title_label = new JLabel("Arbeitstitel eingeben:");
         title_label.setFont(new Font("Arial", Font.PLAIN, 15));
         title_label.setForeground(Color.WHITE);
@@ -64,20 +71,32 @@ public class Main {
         Button button_commit = new Button("Bestätigen", "#282829","#232324","#1E1E1F");
         button_commit.setMaximumSize(new Dimension(400,40));
 
+        //Layout initialisieren und benennen
+        button_commit.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                Layout main_window = new Layout();
+                frame_main.remove(grid_panel);
+                frame_main.add(main_window);
+
+                frame_main.setTitle(workplace_title.getText());
+
+                SwingUtilities.updateComponentTreeUI(frame_main);
+            }
+        });
+
         intro_panel.add(img_label);
         intro_panel.add(Box.createRigidArea(new Dimension(0,20)));
         intro_panel.add(title_label);
+
         intro_panel.add(Box.createRigidArea(new Dimension(0,20)));
-        intro_panel.add(workplace_title);
-        intro_panel.add(Box.createRigidArea(new Dimension(0,30)));
-        intro_panel.add(button_commit);
+        intro_panel_2.add(workplace_title);
+        intro_panel_2.add(Box.createRigidArea(new Dimension(0,20)));
+        intro_panel_2.add(button_commit);
 
-        Layout window_main = new Layout();
-        //frame_main.add(window_main);
-
-        grid_panel.add(Box.createRigidArea(new Dimension(140,0)));
+        grid_panel.add(Box.createRigidArea(new Dimension(150,0)));
         grid_panel.add(intro_panel);
-        grid_panel.add(Box.createRigidArea(new Dimension(400,0)));
+        grid_panel.add(Box.createRigidArea(new Dimension(30,0)));
+        grid_panel.add(intro_panel_2);
 
         frame_main.add(grid_panel);
         frame_main.setVisible(true);
@@ -92,6 +111,6 @@ public class Main {
 
 //NÄCHSTE SCHRITTE
 
-//Logo und Schrift
+//Icons auf Buttons
 
 
